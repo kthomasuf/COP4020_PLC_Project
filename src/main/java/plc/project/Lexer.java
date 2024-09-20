@@ -1,5 +1,6 @@
 package plc.project;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +29,12 @@ public final class Lexer {
      * whitespace where appropriate.
      */
     public List<Token> lex() {
-        throw new UnsupportedOperationException(); //TODO
+        List<Token> tokenList = new ArrayList<Token>();
+        while (chars.index < chars.input.length()) {
+            tokenList.add(lexToken());
+        }
+        return tokenList;
+        // throw new UnsupportedOperationException(); //TODO
     }
 
     /**
@@ -40,15 +46,75 @@ public final class Lexer {
      * by {@link #lex()}
      */
     public Token lexToken() {
-        throw new UnsupportedOperationException(); //TODO
+        if (peek("[A-Za-z_]")) {
+            return lexIdentifier();
+        }
+        else if (peek("([-]|[0-9])")) {
+            Token test = lexNumber();
+            System.out.println(test.getLiteral());
+            return test;
+            // return lexNumber();
+        }
+        // add calls to other lex methods here
+        else {
+            throw new ParseException("", chars.index);
+            // throw new UnsupportedOperationException(); //TODO
+        }
+        // temp
+        // throw new ParseException("", chars.index);
     }
 
     public Token lexIdentifier() {
-        throw new UnsupportedOperationException(); //TODO
+        String identifierRegex = "[A-Za-z0-9_-]*";
+        while (chars.index < chars.input.length()) {
+            if (!match(identifierRegex)) {
+                break;
+            }
+        }
+        return chars.emit(Token.Type.IDENTIFIER);
+        // for invalid regex's return a parse exception
+        // throw new UnsupportedOperationException(); //TODO
     }
 
     public Token lexNumber() {
-        throw new UnsupportedOperationException(); //TODO
+        // starting from the beginning of the token
+        // check if negative is correctly formatted
+        String numberRegex = "[0-9]";
+        if (peek("[-]")) {
+            match("[-]");
+        }
+        // check if zero
+        if (peek("[0]")) {
+            if (peek("[0]", "[\\.]", "[0-9]")) {
+                match("[0]", "[\\.]", "[0-9]");
+
+                while(peek(numberRegex)) {
+                    match(numberRegex);
+                }
+
+                return chars.emit(Token.Type.DECIMAL);
+            }
+            else {
+                match("[0]");
+                return chars.emit(Token.Type.INTEGER);
+            }
+        }
+        // iterate through valid numbers
+        while(peek(numberRegex)) {
+            match(numberRegex);
+        }
+        // once invalid character is reached, check if it is a valid decimal
+        // if it is then continue if not then return token
+        if (peek("[\\.]", "[0-9]")) {
+            match("[\\.]", "[0-9]");
+            while(peek(numberRegex)) {
+                match(numberRegex);
+            }
+            return chars.emit(Token.Type.DECIMAL);
+        }
+
+        return chars.emit(Token.Type.INTEGER);
+        // throw new UnsupportedOperationException(); //TODO
     }
 
     public Token lexCharacter() {
@@ -73,7 +139,13 @@ public final class Lexer {
      * return true if the next characters are {@code 'a', 'b', 'c'}.
      */
     public boolean peek(String... patterns) {
-        throw new UnsupportedOperationException(); //TODO (in Lecture)
+        for (int i = 0; i < patterns.length; i++) {
+            if (!chars.has(i) || !String.valueOf(chars.get(i)).matches(patterns[i])) {
+                return false;
+            }
+        }
+        return true;
+        // throw new UnsupportedOperationException(); //TODO (in Lecture)
     }
 
     /**
@@ -82,7 +154,14 @@ public final class Lexer {
      * true. Hint - it's easiest to have this method simply call peek.
      */
     public boolean match(String... patterns) {
-        throw new UnsupportedOperationException(); //TODO (in Lecture)
+        boolean peek = peek(patterns);
+        if (peek) {
+            for (int i = 0; i < patterns.length; i++) {
+                chars.advance();
+            }
+        }
+        return peek;
+        //throw new UnsupportedOperationException(); //TODO (in Lecture)
     }
 
     /**
