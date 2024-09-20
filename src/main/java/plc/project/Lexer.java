@@ -50,46 +50,55 @@ public final class Lexer {
             return lexIdentifier();
         }
         else if (peek("([-]|[0-9])")) {
-            Token test = lexNumber();
-            System.out.println(test.getLiteral());
-            return test;
-            // return lexNumber();
+            return lexNumber();
         }
-        // add calls to other lex methods here
+        else if (peek("'")) {
+            return lexCharacter();
+        }
+        // add calls to other lex methods here // TODO
         else {
             throw new ParseException("", chars.index);
-            // throw new UnsupportedOperationException(); //TODO
         }
-        // temp
-        // throw new ParseException("", chars.index);
     }
 
     public Token lexIdentifier() {
         String identifierRegex = "[A-Za-z0-9_-]*";
-        while (chars.index < chars.input.length()) {
-            if (!match(identifierRegex)) {
-                break;
-            }
+
+        while (peek(identifierRegex)) {
+            match(identifierRegex);
         }
+
         return chars.emit(Token.Type.IDENTIFIER);
-        // for invalid regex's return a parse exception
-        // throw new UnsupportedOperationException(); //TODO
     }
 
     public Token lexNumber() {
-        // starting from the beginning of the token
+        String validInteger = "[0-9]";
+
         // check if negative is correctly formatted
-        String numberRegex = "[0-9]";
         if (peek("[-]")) {
-            match("[-]");
+            if (peek("[-]", "[0]", "[\\.]", "[0-9]")) {
+                match("[-]", "[0]", "[\\.]", "[0-9]");
+
+                while(peek(validInteger)) {
+                    match(validInteger);
+                }
+
+                return chars.emit(Token.Type.DECIMAL);
+            }
+            else if (peek("[-]", "[1-9]")) {
+                match("[-]", "[1-9]");
+            }
+            else {
+                throw new ParseException("", chars.index);
+            }
         }
         // check if zero
         if (peek("[0]")) {
             if (peek("[0]", "[\\.]", "[0-9]")) {
                 match("[0]", "[\\.]", "[0-9]");
 
-                while(peek(numberRegex)) {
-                    match(numberRegex);
+                while(peek(validInteger)) {
+                    match(validInteger);
                 }
 
                 return chars.emit(Token.Type.DECIMAL);
@@ -99,26 +108,38 @@ public final class Lexer {
                 return chars.emit(Token.Type.INTEGER);
             }
         }
+
         // iterate through valid numbers
-        while(peek(numberRegex)) {
-            match(numberRegex);
+        while(peek(validInteger)) {
+            match(validInteger);
         }
-        // once invalid character is reached, check if it is a valid decimal
-        // if it is then continue if not then return token
+
+        // check for valid decimal
         if (peek("[\\.]", "[0-9]")) {
             match("[\\.]", "[0-9]");
-            while(peek(numberRegex)) {
-                match(numberRegex);
+
+            while(peek(validInteger)) {
+                match(validInteger);
             }
+
             return chars.emit(Token.Type.DECIMAL);
         }
 
         return chars.emit(Token.Type.INTEGER);
-        // throw new UnsupportedOperationException(); //TODO
     }
 
     public Token lexCharacter() {
-        throw new UnsupportedOperationException(); //TODO
+        if (peek("'", "[^\\\\']", "'")) {
+            match("'", "[^\\\\']", "'");
+            return chars.emit(Token.Type.CHARACTER);
+        }
+        else if (peek("'", "[\\\\]", "[bnrt'\"\\\\]","'")) {
+            match("'", "[\\\\]", "[bnrt'\"\\\\]","'");
+            return chars.emit(Token.Type.CHARACTER);
+        }
+        else {
+            throw new ParseException("", chars.index);
+        }
     }
 
     public Token lexString() {
@@ -145,7 +166,6 @@ public final class Lexer {
             }
         }
         return true;
-        // throw new UnsupportedOperationException(); //TODO (in Lecture)
     }
 
     /**
@@ -161,7 +181,6 @@ public final class Lexer {
             }
         }
         return peek;
-        //throw new UnsupportedOperationException(); //TODO (in Lecture)
     }
 
     /**

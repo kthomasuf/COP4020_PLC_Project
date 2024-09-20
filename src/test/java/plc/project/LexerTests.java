@@ -38,8 +38,12 @@ public class LexerTests {
                 Arguments.of("Single Digit", "1", true),
                 Arguments.of("Multiple Digits", "12345", true),
                 Arguments.of("Negative", "-1", true),
-                Arguments.of("Leading Zero", "01", false)
-                // Arguments.of("Zeros Included", "101", true)
+                Arguments.of("Zeros Included", "101", true),
+                Arguments.of("Trailing Zeros", "1000000", true),
+
+                Arguments.of("Leading Zero", "01", false),
+                Arguments.of("Leading Negative Zero", "-01", false),
+                Arguments.of("Many Leading Zeros", "000001", false)
         );
     }
 
@@ -53,9 +57,18 @@ public class LexerTests {
         return Stream.of(
                 Arguments.of("Multiple Digits", "123.456", true),
                 Arguments.of("Negative Decimal", "-1.0", true),
+                Arguments.of("Negative Decimal 2", "-1234567890.01234567890", true),
+                Arguments.of("Many Zeros Decimal", "12345000001.000000", true),
+                Arguments.of("Negative Small Decimal", "-0.1", true),
+                Arguments.of("Negative Small Decimal 2", "-0.000000001", true),
+
                 Arguments.of("Trailing Decimal", "1.", false),
-                Arguments.of("Leading Decimal", ".5", false)
-                // Arguments.of("Negative Leading Decimal", "-.5", false)
+                Arguments.of("Leading Decimal", ".5", false),
+                Arguments.of("Negative Leading Decimal", "-.5", false),
+                Arguments.of("Negative Leading Zero Decimal", "-01.5", false),
+                Arguments.of("Many Decimals", "101.101.101", false)
+                // Unspecified for decimal
+                // Arguments.of("Negative Zero Decimal", "-0.0", false)
         );
     }
 
@@ -69,6 +82,7 @@ public class LexerTests {
         return Stream.of(
                 Arguments.of("Alphabetic", "\'c\'", true),
                 Arguments.of("Newline Escape", "\'\\n\'", true),
+                Arguments.of("Character is Single Quote", "\''\'", false),
                 Arguments.of("Empty", "\'\'", false),
                 Arguments.of("Multiple", "\'abc\'", false)
         );
