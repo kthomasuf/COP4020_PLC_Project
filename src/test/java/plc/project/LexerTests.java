@@ -38,6 +38,7 @@ public class LexerTests {
                 Arguments.of("Single Digit", "1", true),
                 Arguments.of("Multiple Digits", "12345", true),
                 Arguments.of("Negative", "-1", true),
+                Arguments.of("Positive", "+1", true),
                 Arguments.of("Zeros Included", "101", true),
                 Arguments.of("Trailing Zeros", "1000000", true),
 
