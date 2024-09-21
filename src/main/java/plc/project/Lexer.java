@@ -31,6 +31,11 @@ public final class Lexer {
     public List<Token> lex() {
         List<Token> tokenList = new ArrayList<Token>();
         while (chars.index < chars.input.length()) {
+            // skips whitespace
+            if (peek("[ \b\n\r\t]")) {
+                chars.advance();
+                chars.skip();
+            }
             tokenList.add(lexToken());
         }
         return tokenList;
@@ -57,6 +62,9 @@ public final class Lexer {
         }
         else if (peek("\"")) {
             return lexString();
+        }
+        else if (peek("[<>!=]|&&|\\|\\||[^ \\\\b\\\\n\\\\r\\t\\\\]")) {
+            return lexOperator();
         }
         // add calls to other lex methods here // TODO
         else {
@@ -195,7 +203,22 @@ public final class Lexer {
     }
 
     public Token lexOperator() {
-        throw new UnsupportedOperationException(); //TODO
+        // Comparison and single equal
+        if (peek("[<>!=]")) {
+            match("[<>!=]");
+            // comparison equal
+            if (peek("=")) {
+                match("=");
+            }
+            return chars.emit(Token.Type.OPERATOR);
+        }
+
+        // other operators
+        if (peek("&&|\\|\\||[^ \\\\b\\\\n\\\\r\\t\\\\]")) {
+            match ("&&|\\|\\||[^ \\\\b\\\\n\\\\r\\t\\\\]");
+            return chars.emit(Token.Type.OPERATOR);
+        }
+        throw new ParseException("", chars.index);
     }
 
     /**
