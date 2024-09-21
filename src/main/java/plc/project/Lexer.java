@@ -36,7 +36,9 @@ public final class Lexer {
                 chars.advance();
                 chars.skip();
             }
-            tokenList.add(lexToken());
+            else {
+                tokenList.add(lexToken());
+            }
         }
         return tokenList;
         // throw new UnsupportedOperationException(); //TODO
@@ -67,7 +69,7 @@ public final class Lexer {
             return lexOperator();
         }
         else {
-            throw new ParseException("", chars.index);
+            throw new ParseException("Parse Error", chars.index);
         }
     }
 
