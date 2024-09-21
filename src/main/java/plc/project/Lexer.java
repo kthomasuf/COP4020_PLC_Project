@@ -63,7 +63,7 @@ public final class Lexer {
         else if (peek("\"")) {
             return lexString();
         }
-        else if (peek("[<>!=]|&&|\\|\\||[^ \\\\b\\\\n\\\\r\\\\t\\\\]")) {
+        else if (peek("[<>!=]|&&|\\|\\||[^ \\\b\\n\\r\\t\\\\]")) {
             return lexOperator();
         }
         else {
