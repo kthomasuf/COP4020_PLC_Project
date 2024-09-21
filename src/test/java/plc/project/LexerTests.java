@@ -118,10 +118,10 @@ public class LexerTests {
                 Arguments.of("Comparison", "!=", true),
                 Arguments.of("Space", " ", false),
                 Arguments.of("Tab", "\t", false),
-                Arguments.of("Tab", "\b", false),
-                Arguments.of("Tab", "\n", false),
-                Arguments.of("Tab", "\r", false),
-                Arguments.of("Tab", "\\", false)
+                Arguments.of("word bound", "\b", false),
+                Arguments.of("new line", "\n", false),
+                Arguments.of("carriage return", "\r", false),
+                Arguments.of("slash", "\\", false)
         );
     }
 
