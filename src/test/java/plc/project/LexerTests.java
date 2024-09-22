@@ -68,7 +68,6 @@ public class LexerTests {
                 Arguments.of("Negative Leading Decimal", "-.5", false),
                 Arguments.of("Negative Leading Zero Decimal", "-01.5", false),
                 Arguments.of("Many Decimals", "101.101.101", false)
-                // Unspecified for decimal
                 // Arguments.of("Negative Zero Decimal", "-0.0", false)
         );
     }
