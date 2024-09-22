@@ -72,7 +72,7 @@ public final class Lexer {
     }
 
     public Token lexIdentifier() {
-        String identifierRegex = "[A-Za-z0-9_-]*";
+        String identifierRegex = "[A-Za-z0-9_-]";
 
         while (peek(identifierRegex)) {
             match(identifierRegex);
