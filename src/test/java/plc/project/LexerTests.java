@@ -120,7 +120,8 @@ public class LexerTests {
                 Arguments.of("word bound", "\b", false),
                 Arguments.of("new line", "\n", false),
                 Arguments.of("carriage return", "\r", false),
-                Arguments.of("slash", "\\", false)
+                Arguments.of("slash", "\\", false),
+                Arguments.of("addition", "+", true)
         );
     }
 
