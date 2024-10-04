@@ -215,8 +215,14 @@ public final class Lexer {
         }
 
         // other operators
-        if (peek("&&|\\|\\||[^ \\\\b\\\\n\\\\r\\t\\\\]")) {
-            match ("&&|\\|\\||[^ \\\\b\\\\n\\\\r\\t\\\\]");
+        if (peek("[^\\|& \\\\b\\\\n\\\\r\\t\\\\]")) {
+            match("[^\\|& \\\\b\\\\n\\\\r\\t\\\\]");
+            return chars.emit(Token.Type.OPERATOR);
+        } else if (peek("&","&")) {
+            match("&", "&");
+            return chars.emit(Token.Type.OPERATOR);
+        } else if (peek("\\|", "\\|")) {
+            match("\\|", "\\|");
             return chars.emit(Token.Type.OPERATOR);
         }
         throw new ParseException("", chars.index);

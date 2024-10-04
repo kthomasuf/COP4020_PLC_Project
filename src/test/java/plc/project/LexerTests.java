@@ -121,7 +121,9 @@ public class LexerTests {
                 Arguments.of("new line", "\n", false),
                 Arguments.of("carriage return", "\r", false),
                 Arguments.of("slash", "\\", false),
-                Arguments.of("addition", "+", true)
+                Arguments.of("addition", "+", true),
+                Arguments.of("and", "&&", true),
+                Arguments.of("and", "||", true)
         );
     }
 
@@ -146,6 +148,102 @@ public class LexerTests {
                         new Token(Token.Type.STRING, "\"Hello, World!\"", 6),
                         new Token(Token.Type.OPERATOR, ")", 21),
                         new Token(Token.Type.OPERATOR, ";", 22)
+                )),
+                Arguments.of("FizzBuzz", "LET i = 1;\n" +
+                        "WHILE i != 100 DO\n" +
+                        "    IF rem(i, 3) == 0 && rem(i, 5) == 0 DO\n" + // changed from word "AND"
+                        "        print(\"FizzBuzz\");\n" +
+                        "    ELSE IF rem(i, 3) == 0 DO\n" +
+                        "        print(\"Fizz\");\n" +
+                        "    ELSE IF rem(i, 5) == 0 DO\n" +
+                        "        print(\"Buzz\");\n" +
+                        "    ELSE\n" +
+                        "        print(i);\n" +
+                        "    END END END\n" +
+                        "    i = i + 1;\n" +
+                        "END", Arrays.asList(
+                        new Token(Token.Type.IDENTIFIER, "LET", 0),
+                        new Token(Token.Type.IDENTIFIER, "i", 4),
+                        new Token(Token.Type.OPERATOR, "=", 6),
+                        new Token(Token.Type.INTEGER, "1", 8),
+                        new Token(Token.Type.OPERATOR, ";", 9),
+                        new Token(Token.Type.IDENTIFIER, "WHILE", 11),
+                        new Token(Token.Type.IDENTIFIER, "i", 17),
+                        new Token(Token.Type.OPERATOR, "!=", 19),
+                        new Token(Token.Type.INTEGER, "100", 22),
+                        new Token(Token.Type.IDENTIFIER, "DO", 26),
+                        new Token(Token.Type.IDENTIFIER, "IF", 33),
+                        new Token(Token.Type.IDENTIFIER, "rem", 36),
+                        new Token(Token.Type.OPERATOR, "(", 39),
+                        new Token(Token.Type.IDENTIFIER, "i", 40),
+                        new Token(Token.Type.OPERATOR, ",", 41),
+                        new Token(Token.Type.INTEGER, "3", 43),
+                        new Token(Token.Type.OPERATOR, ")", 44),
+                        new Token(Token.Type.OPERATOR, "==", 46),
+                        new Token(Token.Type.INTEGER, "0", 49),
+                        new Token(Token.Type.OPERATOR, "&&", 51), // changed from two ops '&' and '&'
+                        new Token(Token.Type.IDENTIFIER, "rem", 54),
+                        new Token(Token.Type.OPERATOR, "(", 57),
+                        new Token(Token.Type.IDENTIFIER, "i", 58),
+                        new Token(Token.Type.OPERATOR, ",", 59),
+                        new Token(Token.Type.INTEGER, "5", 61),
+                        new Token(Token.Type.OPERATOR, ")", 62),
+                        new Token(Token.Type.OPERATOR, "==", 64),
+                        new Token(Token.Type.INTEGER, "0", 67),
+                        new Token(Token.Type.IDENTIFIER, "DO", 69),
+                        new Token(Token.Type.IDENTIFIER, "print", 80),
+                        new Token(Token.Type.OPERATOR, "(", 85),
+                        new Token(Token.Type.STRING, "\"FizzBuzz\"", 86),
+                        new Token(Token.Type.OPERATOR, ")", 96),
+                        new Token(Token.Type.OPERATOR, ";", 97),
+                        new Token(Token.Type.IDENTIFIER, "ELSE", 103),
+                        new Token(Token.Type.IDENTIFIER, "IF", 108),
+                        new Token(Token.Type.IDENTIFIER, "rem", 111),
+                        new Token(Token.Type.OPERATOR, "(", 114),
+                        new Token(Token.Type.IDENTIFIER, "i", 115),
+                        new Token(Token.Type.OPERATOR, ",", 116),
+                        new Token(Token.Type.INTEGER, "3", 118),
+                        new Token(Token.Type.OPERATOR, ")", 119),
+                        new Token(Token.Type.OPERATOR, "==", 121),
+                        new Token(Token.Type.INTEGER, "0", 124),
+                        new Token(Token.Type.IDENTIFIER, "DO", 126),
+                        new Token(Token.Type.IDENTIFIER, "print", 137),
+                        new Token(Token.Type.OPERATOR, "(", 142),
+                        new Token(Token.Type.STRING, "\"Fizz\"", 143),
+                        new Token(Token.Type.OPERATOR, ")", 149),
+                        new Token(Token.Type.OPERATOR, ";", 150),
+                        new Token(Token.Type.IDENTIFIER, "ELSE", 156),
+                        new Token(Token.Type.IDENTIFIER, "IF", 161),
+                        new Token(Token.Type.IDENTIFIER, "rem", 164),
+                        new Token(Token.Type.OPERATOR, "(", 167),
+                        new Token(Token.Type.IDENTIFIER, "i", 168),
+                        new Token(Token.Type.OPERATOR, ",", 169),
+                        new Token(Token.Type.INTEGER, "5", 171),
+                        new Token(Token.Type.OPERATOR, ")", 172),
+                        new Token(Token.Type.OPERATOR, "==", 174),
+                        new Token(Token.Type.INTEGER, "0", 177),
+                        new Token(Token.Type.IDENTIFIER, "DO", 179),
+                        new Token(Token.Type.IDENTIFIER, "print", 190),
+                        new Token(Token.Type.OPERATOR, "(", 195),
+                        new Token(Token.Type.STRING, "\"Buzz\"", 196),
+                        new Token(Token.Type.OPERATOR, ")", 202),
+                        new Token(Token.Type.OPERATOR, ";", 203),
+                        new Token(Token.Type.IDENTIFIER, "ELSE", 209),
+                        new Token(Token.Type.IDENTIFIER, "print", 222),
+                        new Token(Token.Type.OPERATOR, "(", 227),
+                        new Token(Token.Type.IDENTIFIER, "i", 228),
+                        new Token(Token.Type.OPERATOR, ")", 229),
+                        new Token(Token.Type.OPERATOR, ";", 230),
+                        new Token(Token.Type.IDENTIFIER, "END", 236),
+                        new Token(Token.Type.IDENTIFIER, "END", 240),
+                        new Token(Token.Type.IDENTIFIER, "END", 244),
+                        new Token(Token.Type.IDENTIFIER, "i", 252),
+                        new Token(Token.Type.OPERATOR, "=", 254),
+                        new Token(Token.Type.IDENTIFIER, "i", 256),
+                        new Token(Token.Type.OPERATOR, "+", 258),
+                        new Token(Token.Type.INTEGER, "1", 260),
+                        new Token(Token.Type.OPERATOR, ";", 261),
+                        new Token(Token.Type.IDENTIFIER, "END", 263)
                 ))
         );
     }
