@@ -149,6 +149,10 @@ public class LexerTests {
                         new Token(Token.Type.OPERATOR, ")", 21),
                         new Token(Token.Type.OPERATOR, ";", 22)
                 )),
+                Arguments.of("Mixed", "+0", Arrays.asList(
+                                new Token(Token.Type.OPERATOR, "+", 0),
+                                new Token(Token.Type.INTEGER, "0", 1)
+                )),
                 Arguments.of("FizzBuzz", "LET i = 1;\n" +
                         "WHILE i != 100 DO\n" +
                         "    IF rem(i, 3) == 0 && rem(i, 5) == 0 DO\n" + // changed from word "AND"

@@ -56,7 +56,7 @@ public final class Lexer {
         if (peek("[A-Za-z_]")) {
             return lexIdentifier();
         }
-        else if (peek("[-+]","[0-9]") || peek("[0-9]") ) {
+        else if (peek("[-+]","[1-9]") || peek("[-+]","0", ".") || peek("[0-9]") ) {
             return lexNumber();
         }
         else if (peek("'")) {
