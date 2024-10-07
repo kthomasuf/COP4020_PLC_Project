@@ -156,7 +156,7 @@ public final class Parser {
         }
 
 
-        Ast.Statement.Declaration initialization = new Ast.Statement.Declaration("", Optional.empty());
+        Ast.Statement.Declaration initialization = null;
         if (peek(Token.Type.IDENTIFIER)) {
             match(Token.Type.IDENTIFIER);
             String identifierStr = tokens.get(-1).getLiteral();
@@ -181,7 +181,7 @@ public final class Parser {
         }
 
 
-        Ast.Statement.Expression increment = new Ast.Statement.Expression(new Ast.Expression.Access(Optional.empty(), ""));
+        Ast.Statement.Expression increment = null;
         if (peek(Token.Type.IDENTIFIER)) {
             match(Token.Type.IDENTIFIER);
             String identifierStr = tokens.get(-1).getLiteral();
