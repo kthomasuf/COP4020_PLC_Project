@@ -90,8 +90,19 @@ public final class Parser {
         if (!match("LET")) {
             throw new ParseException("Expected LET", tokens.index);
         }
-        throw new UnsupportedOperationException();
+        if (!peek(Token.Type.IDENTIFIER)) {
+            throw new ParseException("Expected IDENTIFIER", tokens.index);
+        }
 
+        match(Token.Type.IDENTIFIER);
+        String identifierStr = tokens.get(-1).getLiteral();
+        if (!peek("=")) {
+            return new Ast.Statement.Declaration(identifierStr, Optional.empty());
+        }
+        match("=");
+
+        Ast.Expression expr = parseExpression();
+        return new Ast.Statement.Declaration(identifierStr, Optional.of(expr));
     }
 
     /**

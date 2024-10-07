@@ -383,6 +383,27 @@ final class ParserExpressionTests {
         );
     }
 
+    @ParameterizedTest
+    @MethodSource
+    void testDeclarationStatement(String test, List<Token> tokens, Ast.Statement.Declaration expected) {
+        test(tokens, expected, Parser::parseStatement);
+    }
+
+    private static Stream<Arguments> testDeclarationStatement() {
+        return Stream.of(
+                Arguments.of("Let",
+                        Arrays.asList(
+                                // LET expr;
+                                new Token(Token.Type.IDENTIFIER, "LET", 0),
+                                new Token(Token.Type.IDENTIFIER, "expr", 3),
+                                new Token(Token.Type.OPERATOR, ";", 7)
+                        ),
+
+                        new Ast.Statement.Declaration("expr", Optional.empty())
+                )
+        );
+    }
+
     /**
      * Standard test function. If expected is null, a ParseException is expected
      * to be thrown (not used in the provided tests).
