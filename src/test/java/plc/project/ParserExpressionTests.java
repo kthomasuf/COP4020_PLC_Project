@@ -36,6 +36,27 @@ final class ParserExpressionTests {
                                 new Token(Token.Type.OPERATOR, ";", 6)
                         ),
                         new Ast.Statement.Expression(new Ast.Expression.Function(Optional.empty(), "name", Arrays.asList()))
+                ),
+                Arguments.of("Variable",
+                        Arrays.asList(
+                                new Token(Token.Type.IDENTIFIER, "expr", 0),
+                                new Token(Token.Type.OPERATOR, ";", 4)
+                        ),
+                        new Ast.Statement.Expression(new Ast.Expression.Access(Optional.empty(), "expr"))
+                ),
+                Arguments.of("Function",
+                        Arrays.asList(
+                                new Token(Token.Type.IDENTIFIER, "func", 0),
+                                new Token(Token.Type.IDENTIFIER, "(", 4),
+                                new Token(Token.Type.IDENTIFIER, ")", 5),
+                                new Token(Token.Type.OPERATOR, ";", 6)
+                        ),
+                        new Ast.Statement.Expression(new Ast.Expression.Function(Optional.empty(), "func", Arrays.asList()))
+                ), Arguments.of("Missing Semicolon",
+                        Arrays.asList(
+                                new Token(Token.Type.IDENTIFIER, "f", 0)
+                        ),
+                        new Ast.Statement.Expression(new Ast.Expression.Access(Optional.empty(), "f"))
                 )
         );
     }
@@ -50,7 +71,6 @@ final class ParserExpressionTests {
         return Stream.of(
                 Arguments.of("Assignment",
                         Arrays.asList(
-                                // name = value;
                                 new Token(Token.Type.IDENTIFIER, "name", 0),
                                 new Token(Token.Type.OPERATOR, "=", 5),
                                 new Token(Token.Type.IDENTIFIER, "value", 7),
@@ -60,6 +80,14 @@ final class ParserExpressionTests {
                                 new Ast.Expression.Access(Optional.empty(), "name"),
                                 new Ast.Expression.Access(Optional.empty(), "value")
                         )
+                ),
+                Arguments.of("Missing Value",
+                        Arrays.asList(
+                                new Token(Token.Type.IDENTIFIER, "name", 0),
+                                new Token(Token.Type.OPERATOR, "=", 5),
+                                new Token(Token.Type.OPERATOR, ";", 7)
+                        ),
+                        null
                 )
         );
     }

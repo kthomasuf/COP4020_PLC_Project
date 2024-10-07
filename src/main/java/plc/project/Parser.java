@@ -57,7 +57,28 @@ public final class Parser {
      * statement, then it is an expression/assignment statement.
      */
     public Ast.Statement parseStatement() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (peek("IF")) {
+            return parseIfStatement();
+        } else if (peek("FOR")) {
+            return parseForStatement();
+        } else if (peek("WHILE")) {
+            return parseWhileStatement();
+        } else if (peek("LET")) {
+            return parseDeclarationStatement();
+        } else if (peek("RETURN")){
+            return parseReturnStatement();
+        } else if (peek(Token.Type.IDENTIFIER, "=")) {
+            Ast.Expression expr = parseExpression();
+            if (!match("=")) {
+                throw new ParseException("Expected =", tokens.index);
+            }
+            if (!peek(Token.Type.IDENTIFIER)) {
+                throw new ParseException("Expected IDENTIFIER", tokens.index);
+            }
+            Ast.Expression expr2 = parseExpression();
+            return new Ast.Statement.Assignment(expr, expr2);
+        }
+        return new Ast.Statement.Expression(parseExpression());
     }
 
     /**
@@ -66,7 +87,11 @@ public final class Parser {
      * statement, aka {@code LET}.
      */
     public Ast.Statement.Declaration parseDeclarationStatement() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (!match("LET")) {
+            throw new ParseException("Expected LET", tokens.index);
+        }
+        throw new UnsupportedOperationException();
+
     }
 
     /**
@@ -75,7 +100,35 @@ public final class Parser {
      * {@code IF}.
      */
     public Ast.Statement.If parseIfStatement() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (!match("IF")) {
+            throw new ParseException("Expected IF", tokens.index);
+        }
+
+        Ast.Expression condition = parseExpression();
+
+        if (!match("DO")) {
+            throw new ParseException("Expected DO", tokens.index);
+        }
+
+
+        List<Ast.Statement> thenStatements = new ArrayList<>();
+        while (!peek("ELSE") && !peek("END")) {
+            thenStatements.add(parseStatement());
+        }
+        if (!match("ELSE")) {
+            throw new ParseException("Expected ELSE", tokens.index);
+        }
+
+
+        List<Ast.Statement> elseStatements = new ArrayList<>();
+        while (!peek("END")) {
+            elseStatements.add(parseStatement());
+        }
+        if (!match("END")) {
+            throw new ParseException("Expected END", tokens.index);
+        }
+
+        return new Ast.Statement.If(condition, thenStatements, elseStatements);
     }
 
     /**
@@ -84,7 +137,65 @@ public final class Parser {
      * {@code FOR}.
      */
     public Ast.Statement.For parseForStatement() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (!match("FOR")) {
+            throw new ParseException("Expected FOR", tokens.index);
+        }
+        if (!match("(")) {
+            throw new ParseException("Expected (", tokens.index);
+        }
+
+
+        Ast.Statement.Declaration initialization = new Ast.Statement.Declaration("", Optional.empty());
+        if (peek(Token.Type.IDENTIFIER)) {
+            match(Token.Type.IDENTIFIER);
+            String identifierStr = tokens.get(-1).getLiteral();
+            if (!peek("=")) {
+                throw new ParseException("Expected =", tokens.index);
+            }
+            match("=");
+            Ast.Expression expr = parseExpression();
+            initialization = new Ast.Statement.Declaration(identifierStr, Optional.of(expr));
+        }
+
+
+        if (!peek(";")) {
+            throw new ParseException("Expected ;", tokens.index);
+        }
+        match(";");
+
+
+        Ast.Expression condition = parseExpression();
+        if (!match(";")) {
+            throw new ParseException("Expected ;", tokens.index);
+        }
+
+
+        Ast.Statement.Expression increment = new Ast.Statement.Expression(new Ast.Expression.Access(Optional.empty(), ""));
+        if (peek(Token.Type.IDENTIFIER)) {
+            match(Token.Type.IDENTIFIER);
+            String identifierStr = tokens.get(-1).getLiteral();
+            if (!peek("=")) {
+                throw new ParseException("Expected =", tokens.index);
+            }
+            match("=");
+
+            Ast.Expression expr = parseExpression();
+            Ast.Expression.Access access = new Ast.Expression.Access(Optional.of(expr), identifierStr);
+            increment = new Ast.Statement.Expression(access);
+        }
+        if (!match(")")) {
+            throw new ParseException("Expected )", tokens.index);
+        }
+
+        List<Ast.Statement> statements = new ArrayList<>();
+        while (!peek("END")) {
+            statements.add((parseStatement()));
+        }
+        if (!match("END")) {
+            throw new ParseException("Expected END", tokens.index);
+        }
+
+        return new Ast.Statement.For(initialization, condition, increment, statements);
     }
 
     /**
@@ -93,7 +204,23 @@ public final class Parser {
      * {@code WHILE}.
      */
     public Ast.Statement.While parseWhileStatement() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (!match("WHILE")) {
+            throw new ParseException("Expected WHILE", tokens.index);
+        }
+
+        Ast.Expression condition = parseExpression();
+        if (!match("DO")) {
+            throw new ParseException("Expected DO", tokens.index);
+        }
+
+        List<Ast.Statement> statements = new ArrayList<>();
+        while(!peek("END")) {
+            statements.add(parseStatement());
+        }
+        if (!match("END")) {
+            throw new ParseException("Expected END", tokens.index);
+        }
+        return new Ast.Statement.While(condition, statements);
     }
 
     /**
@@ -102,7 +229,12 @@ public final class Parser {
      * {@code RETURN}.
      */
     public Ast.Statement.Return parseReturnStatement() throws ParseException {
-        throw new UnsupportedOperationException(); //TODO
+        if (!match("RETURN")) {
+            throw new ParseException("Expected RETURN", tokens.index);
+        }
+
+        Ast.Expression value = parseExpression();
+        return new Ast.Statement.Return(value);
     }
 
     /**
@@ -407,7 +539,6 @@ public final class Parser {
         }
 
         return peek;
-        // throw new UnsupportedOperationException(); //TODO (in lecture)
     }
 
     private static final class TokenStream {
