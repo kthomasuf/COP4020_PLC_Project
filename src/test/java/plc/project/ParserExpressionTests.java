@@ -56,7 +56,20 @@ final class ParserExpressionTests {
                         Arrays.asList(
                                 new Token(Token.Type.IDENTIFIER, "f", 0)
                         ),
-                        new Ast.Statement.Expression(new Ast.Expression.Access(Optional.empty(), "f"))
+                        null
+                ),
+                Arguments.of("Method Call",
+                        Arrays.asList(
+                                // obj.method
+                                new Token(Token.Type.IDENTIFIER, "obj", 0),
+                                new Token(Token.Type.OPERATOR, ".", 3),
+                                new Token(Token.Type.IDENTIFIER, "method", 4),
+                                new Token(Token.Type.OPERATOR, "(", 10),
+                                new Token(Token.Type.OPERATOR, ")", 11),
+                                new Token(Token.Type.OPERATOR, ";", 12)
+
+                        ),
+                        new Ast.Statement.Expression(new Ast.Expression.Function(Optional.of(new Ast.Expression.Access(Optional.empty(), "obj")), "method", Arrays.asList()))
                 )
         );
     }
@@ -86,6 +99,37 @@ final class ParserExpressionTests {
                                 new Token(Token.Type.IDENTIFIER, "name", 0),
                                 new Token(Token.Type.OPERATOR, "=", 5),
                                 new Token(Token.Type.OPERATOR, ";", 7)
+                        ),
+                        null
+                ),
+                Arguments.of("Field",
+                        Arrays.asList(
+                                new Token(Token.Type.IDENTIFIER, "obj", 0),
+                                new Token(Token.Type.OPERATOR, ".", 3),
+                                new Token(Token.Type.IDENTIFIER, "field", 4),
+                                new Token(Token.Type.OPERATOR, "=", 6),
+                                new Token(Token.Type.IDENTIFIER, "expr", 8),
+                                new Token(Token.Type.OPERATOR, ";", 12)
+                        ),
+                        new Ast.Statement.Assignment(
+                                new Ast.Expression.Access(Optional.of(new Ast.Expression.Access(Optional.empty(), "obj")), "field"),
+                                new Ast.Expression.Access(Optional.empty(), "expr")
+                        )
+                ),
+                Arguments.of("Missing Semicolon",
+                        Arrays.asList(
+                                new Token(Token.Type.IDENTIFIER, "name", 0),
+                                new Token(Token.Type.OPERATOR, "=", 5),
+                                new Token(Token.Type.IDENTIFIER, "expr", 7)
+                        ),
+                        null
+                ),
+                Arguments.of("Invalid Name",
+                        // obj.5
+                        Arrays.asList(
+                                new Token(Token.Type.IDENTIFIER, "obj", 0),
+                                new Token(Token.Type.OPERATOR, ".", 3),
+                                new Token(Token.Type.IDENTIFIER, "5", 4)
                         ),
                         null
                 )
@@ -253,16 +297,6 @@ final class ParserExpressionTests {
                         Arrays.asList(new Token(Token.Type.IDENTIFIER, "name", 0)),
                         new Ast.Expression.Access(Optional.empty(), "name")
                 ),
-                Arguments.of("Invalid Name",
-                        // obj.5
-                        Arrays.asList(
-                                new Token(Token.Type.IDENTIFIER, "obj", 0),
-                                new Token(Token.Type.OPERATOR, ".", 3),
-                                new Token(Token.Type.IDENTIFIER, "5", 4)
-                                ),
-                        null
-                ),
-
                 Arguments.of("Field Access",
                         Arrays.asList(
                                 // obj.field
@@ -310,17 +344,6 @@ final class ParserExpressionTests {
                                 new Ast.Expression.Access(Optional.empty(), "expr2"),
                                 new Ast.Expression.Access(Optional.empty(), "expr3")
                         ))
-                ),
-                Arguments.of("Method Call",
-                        Arrays.asList(
-                                // obj.method
-                                new Token(Token.Type.IDENTIFIER, "obj", 0),
-                                new Token(Token.Type.OPERATOR, ".", 3),
-                                new Token(Token.Type.IDENTIFIER, "method", 4),
-                                new Token(Token.Type.OPERATOR, "(", 10),
-                                new Token(Token.Type.OPERATOR, ")", 11)
-                        ),
-                        new Ast.Expression.Function(Optional.empty(), "method", Arrays.asList())
                 ),
                 Arguments.of("Trailing comma",
                         Arrays.asList(

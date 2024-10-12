@@ -185,16 +185,26 @@ public final class Parser {
             return parseDeclarationStatement();
         } else if (peek("RETURN")){
             return parseReturnStatement();
-        } else if (peek(Token.Type.IDENTIFIER, "=")) {
+        } else if (peek(Token.Type.IDENTIFIER)) {
             Ast.Expression expr = parseExpression();
-            if (!match("=")) {
-                throw new ParseException("Expected =", tokens.index);
+            if (peek("=")) {
+                if (!match("=")) {
+                    throw new ParseException("Expected =", tokens.index);
+                }
+                if (!peek(Token.Type.IDENTIFIER)) {
+                    throw new ParseException("Expected IDENTIFIER", tokens.index);
+                }
+                Ast.Expression expr2 = parseExpression();
+                if (!match(";")) {
+                    throw new ParseException("Expected ;", tokens.index);
+                }
+                return new Ast.Statement.Assignment(expr, expr2);
+            } else if (peek(Token.Type.IDENTIFIER)) {
             }
-            if (!peek(Token.Type.IDENTIFIER)) {
-                throw new ParseException("Expected IDENTIFIER", tokens.index);
+            if (!match(";")) {
+                throw new ParseException("Expected ;", tokens.index);
             }
-            Ast.Expression expr2 = parseExpression();
-            return new Ast.Statement.Assignment(expr, expr2);
+            return new Ast.Statement.Expression(expr);
         }
         return new Ast.Statement.Expression(parseExpression());
     }
@@ -519,7 +529,7 @@ public final class Parser {
 
                     if (peek(")")) {
                         match(")");
-                        return new Ast.Expression.Function(Optional.empty(), firstIdentifier, arguments);
+                        return new Ast.Expression.Function(Optional.of(expr), firstIdentifier, arguments);
                     }
                     else {
                         throw new ParseException("Expected )", tokens.index);
