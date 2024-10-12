@@ -578,7 +578,30 @@ public final class Parser {
         }
         else if (peek(Token.Type.CHARACTER)) {
             match(Token.Type.CHARACTER);
-            return new Ast.Expression.Literal(tokens.get(-1).getLiteral().charAt(1));
+            if (tokens.get(-1).getLiteral().contains("\\b")) {
+                return new Ast.Expression.Literal(tokens.get(-1).getLiteral().substring(1, tokens.get(-1).getLiteral().length() - 1).replace("\\b", "\b").charAt(0));
+            }
+            else if (tokens.get(-1).getLiteral().contains("\\n")) {
+                return new Ast.Expression.Literal(tokens.get(-1).getLiteral().substring(1, tokens.get(-1).getLiteral().length() - 1).replace("\\n", "\n").charAt(0));
+            }
+            else if (tokens.get(-1).getLiteral().contains("\\r")) {
+                return new Ast.Expression.Literal(tokens.get(-1).getLiteral().substring(1, tokens.get(-1).getLiteral().length() - 1).replace("\\r", "\r").charAt(0));
+            }
+            else if (tokens.get(-1).getLiteral().contains("\\t")) {
+                return new Ast.Expression.Literal(tokens.get(-1).getLiteral().substring(1, tokens.get(-1).getLiteral().length() - 1).replace("\\t", "\t").charAt(0));
+            }
+            else if (tokens.get(-1).getLiteral().contains("\\'")) {
+                return new Ast.Expression.Literal(tokens.get(-1).getLiteral().substring(1, tokens.get(-1).getLiteral().length() - 1).replace("\\'", "\'").charAt(0));
+            }
+            else if (tokens.get(-1).getLiteral().contains("\\\"")) {
+                return new Ast.Expression.Literal(tokens.get(-1).getLiteral().substring(1, tokens.get(-1).getLiteral().length() - 1).replace("\\\"", "\"").charAt(0));
+            }
+            else if (tokens.get(-1).getLiteral().contains("\\\\")) {
+                return new Ast.Expression.Literal(tokens.get(-1).getLiteral().substring(1, tokens.get(-1).getLiteral().length() - 1).replace("\\\\", "\\").charAt(0));
+            }
+            else {
+                return new Ast.Expression.Literal(tokens.get(-1).getLiteral().charAt(1));
+            }
         }
         else if (peek(Token.Type.STRING)) {
             match(Token.Type.STRING);
@@ -594,6 +617,15 @@ public final class Parser {
             }
             else if (tokens.get(-1).getLiteral().contains("\\t")) {
                 return new Ast.Expression.Literal(tokens.get(-1).getLiteral().substring(1, tokens.get(-1).getLiteral().length() - 1).replace("\\t", "\t"));
+            }
+            else if (tokens.get(-1).getLiteral().contains("\\'")) {
+                return new Ast.Expression.Literal(tokens.get(-1).getLiteral().substring(1, tokens.get(-1).getLiteral().length() - 1).replace("\\'", "'"));
+            }
+            else if (tokens.get(-1).getLiteral().contains("\\\\")) {
+                return new Ast.Expression.Literal(tokens.get(-1).getLiteral().substring(1, tokens.get(-1).getLiteral().length() - 1).replace("\\\\", "\\"));
+            }
+            else if (tokens.get(-1).getLiteral().contains("\\\"")) {
+                return new Ast.Expression.Literal(tokens.get(-1).getLiteral().substring(1, tokens.get(-1).getLiteral().length() - 1).replace("\\\"", "\""));
             }
             else {
                 return new Ast.Expression.Literal(tokens.get(-1).getLiteral().substring(1, tokens.get(-1).getLiteral().length() - 1));

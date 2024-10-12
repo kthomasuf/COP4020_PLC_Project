@@ -171,6 +171,62 @@ final class ParserExpressionTests {
                 Arguments.of("Escape Character",
                         Arrays.asList(new Token(Token.Type.STRING, "\"Hello,\\nWorld!\"", 0)),
                         new Ast.Expression.Literal("Hello,\nWorld!")
+                ),
+                Arguments.of("Character Escape",
+                        Arrays.asList(new Token(Token.Type.CHARACTER, "'\\b'", 0)),
+                        new Ast.Expression.Literal('\b')
+                ),
+                Arguments.of("Character Escape",
+                        Arrays.asList(new Token(Token.Type.CHARACTER, "'\\n'", 0)),
+                        new Ast.Expression.Literal('\n')
+                ),
+                Arguments.of("Character Escape",
+                        Arrays.asList(new Token(Token.Type.CHARACTER, "'\\r'", 0)),
+                        new Ast.Expression.Literal('\r')
+                ),
+                Arguments.of("Character Escape",
+                        Arrays.asList(new Token(Token.Type.CHARACTER, "'\\t'", 0)),
+                        new Ast.Expression.Literal('\t')
+                ),
+                Arguments.of("Character Escape",
+                        Arrays.asList(new Token(Token.Type.CHARACTER, "'\\''", 0)),
+                        new Ast.Expression.Literal('\'')
+                ),
+                Arguments.of("Character Escape",
+                        Arrays.asList(new Token(Token.Type.CHARACTER, "'\\\"'", 0)),
+                        new Ast.Expression.Literal('\"')
+                ),
+                Arguments.of("Character Escape",
+                        Arrays.asList(new Token(Token.Type.CHARACTER, "'\\\\'", 0)),
+                        new Ast.Expression.Literal('\\')
+                ),
+                Arguments.of("String Escape Double Quote",
+                        Arrays.asList(new Token(Token.Type.STRING, "\"\\\"\"", 0)),
+                        new Ast.Expression.Literal("\"")
+                ),
+                Arguments.of("String Escape Single Quote",
+                        Arrays.asList(new Token(Token.Type.STRING, "\"\\'\"", 0)),
+                        new Ast.Expression.Literal("'")
+                ),
+                Arguments.of("String Escape Slash",
+                        Arrays.asList(new Token(Token.Type.STRING, "\"\\\\\"", 0)),
+                        new Ast.Expression.Literal("\\")
+                ),
+                Arguments.of("String Escape B",
+                        Arrays.asList(new Token(Token.Type.STRING, "\"\\b\"", 0)),
+                        new Ast.Expression.Literal("\b")
+                ),
+                Arguments.of("String Escape N",
+                        Arrays.asList(new Token(Token.Type.STRING, "\"\\n\"", 0)),
+                        new Ast.Expression.Literal("\n")
+                ),
+                Arguments.of("String Escape R",
+                        Arrays.asList(new Token(Token.Type.STRING, "\"\\r\"", 0)),
+                        new Ast.Expression.Literal("\r")
+                ),
+                Arguments.of("String Escape T",
+                        Arrays.asList(new Token(Token.Type.STRING, "\"\\t\"", 0)),
+                        new Ast.Expression.Literal("\t")
                 )
         );
     }
