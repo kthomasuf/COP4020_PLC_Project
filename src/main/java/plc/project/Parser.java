@@ -394,22 +394,8 @@ public final class Parser {
             match("&&");
             String prev = tokens.get(-1).getLiteral();
             Ast.Expression exprRight = parseEqualityExpression();
-            System.out.println(exprRight);
             expr = new Ast.Expression.Binary(prev, expr, exprRight);
         }
-//        if (peek("||")) {
-//            match("||");
-//            String prev = tokens.get(-1).getLiteral();
-//            Ast.Expression exprRight = parseLogicalExpression();
-//            expr = new Ast.Expression.Binary(prev, expr, exprRight);
-//        }
-//        while (peek("&&")) {
-//        // else if (peek("&&")) {
-//            match("&&");
-//            String prev = tokens.get(-1).getLiteral();
-//            Ast.Expression exprRight = parseLogicalExpression();
-//            expr = new Ast.Expression.Binary(prev, expr, exprRight);
-//        }
 
         return expr;
     }
@@ -431,42 +417,6 @@ public final class Parser {
             Ast.Expression exprRight = parseAdditiveExpression();
             expr = new Ast.Expression.Binary(prev, expr, exprRight);
         }
-//        if (peek("<")) {
-//            match("<");
-//            String prev = tokens.get(-1).getLiteral();
-//            Ast.Expression exprRight = parseEqualityExpression();
-//            expr = new Ast.Expression.Binary(prev, expr, exprRight);
-//        }
-//        else if (peek("<=")) {
-//            match("<=");
-//            String prev = tokens.get(-1).getLiteral();
-//            Ast.Expression exprRight = parseEqualityExpression();
-//            expr = new Ast.Expression.Binary(prev, expr, exprRight);
-//        }
-//        else if (peek(">")) {
-//            match(">");
-//            String prev = tokens.get(-1).getLiteral();
-//            Ast.Expression exprRight = parseEqualityExpression();
-//            expr = new Ast.Expression.Binary(prev, expr, exprRight);
-//        }
-//        else if (peek(">=")) {
-//            match(">=");
-//            String prev = tokens.get(-1).getLiteral();
-//            Ast.Expression exprRight = parseEqualityExpression();
-//            expr = new Ast.Expression.Binary(prev, expr, exprRight);
-//        }
-//        else if (peek("==")) {
-//            match("==");
-//            String prev = tokens.get(-1).getLiteral();
-//            Ast.Expression exprRight = parseEqualityExpression();
-//            expr = new Ast.Expression.Binary(prev, expr, exprRight);
-//        }
-//        else if (peek("!=")) {
-//            match("!=");
-//            String prev = tokens.get(-1).getLiteral();
-//            Ast.Expression exprRight = parseEqualityExpression();
-//            expr = new Ast.Expression.Binary(prev, expr, exprRight);
-//        }
 
         return expr;
     }
@@ -484,18 +434,6 @@ public final class Parser {
             Ast.Expression exprRight = parseMultiplicativeExpression();
             expr = new Ast.Expression.Binary(prev, expr, exprRight);
         }
-//        if (peek("+")) {
-//            match("+");
-//            String prev = tokens.get(-1).getLiteral();
-//            Ast.Expression exprRight = parseMultiplicativeExpression();
-//            expr = new Ast.Expression.Binary(prev, expr, exprRight);
-//        }
-//        else if (peek("-")) {
-//            match("-");
-//            String prev = tokens.get(-1).getLiteral();
-//            Ast.Expression exprRight = parseMultiplicativeExpression();
-//            expr = new Ast.Expression.Binary(prev, expr, exprRight);
-//        }
 
         return expr;
     }
@@ -513,18 +451,6 @@ public final class Parser {
             Ast.Expression exprRight = parseSecondaryExpression();
             expr = new Ast.Expression.Binary(prev, expr, exprRight);
         }
-//        if (peek("/")) {
-//            match("/");
-//            String prev = tokens.get(-1).getLiteral();
-//            Ast.Expression exprRight = parseSecondaryExpression();
-//            expr = new Ast.Expression.Binary(prev, expr, exprRight);
-//        }
-//        else if (peek("*")) {
-//            match("*");
-//            String prev = tokens.get(-1).getLiteral();
-//            Ast.Expression exprRight = parseSecondaryExpression();
-//            expr = new Ast.Expression.Binary(prev, expr, exprRight);
-//        }
 
         return expr;
     }
