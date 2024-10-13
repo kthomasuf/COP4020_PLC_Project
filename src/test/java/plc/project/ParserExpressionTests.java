@@ -445,7 +445,7 @@ final class ParserExpressionTests {
                                 new Token(Token.Type.IDENTIFIER, "expr3", 14)
                         ),
 
-                        new Ast.Expression.Binary("&&", new Ast.Expression.Access(Optional.empty(), "expr1"), new Ast.Expression.Binary("||", new Ast.Expression.Access(Optional.empty(), "expr2"), new Ast.Expression.Access(Optional.empty(), "expr3")))
+                        new Ast.Expression.Binary("||", new Ast.Expression.Binary("&&", new Ast.Expression.Access(Optional.empty(), "expr1"), new Ast.Expression.Access(Optional.empty(), "expr2")), new Ast.Expression.Access(Optional.empty(), "expr3"))
                 ),
                 Arguments.of("Equals Not Equals",
                         Arrays.asList(
@@ -457,7 +457,7 @@ final class ParserExpressionTests {
                                 new Token(Token.Type.IDENTIFIER, "expr3", 14)
                         ),
 
-                        new Ast.Expression.Binary("==", new Ast.Expression.Access(Optional.empty(), "expr1"), new Ast.Expression.Binary("!=", new Ast.Expression.Access(Optional.empty(), "expr2"), new Ast.Expression.Access(Optional.empty(), "expr3")))
+                        new Ast.Expression.Binary("!=", new Ast.Expression.Binary("==", new Ast.Expression.Access(Optional.empty(), "expr1"), new Ast.Expression.Access(Optional.empty(), "expr2")), new Ast.Expression.Access(Optional.empty(), "expr3"))
                 )
         );
     }
