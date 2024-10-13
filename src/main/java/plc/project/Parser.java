@@ -498,13 +498,14 @@ public final class Parser {
                     }
                 }
                 else {
-                    return new Ast.Expression.Access(Optional.of(expr), tokens.get(-1).getLiteral());
+                    expr = new Ast.Expression.Access(Optional.of(expr), methodName);
                 }
             }
             else {
                 throw new ParseException("Expected Identifier", tokens.index);
             }
         }
+
         return expr;
     }
 

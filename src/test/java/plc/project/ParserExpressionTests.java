@@ -362,6 +362,17 @@ final class ParserExpressionTests {
                         ),
                         new Ast.Expression.Access(Optional.of(new
                                 Ast.Expression.Access(Optional.empty(), "obj")), "field")
+                ),
+                Arguments.of("Nested Field Access",
+                        Arrays.asList(
+                                // obj.field
+                                new Token(Token.Type.IDENTIFIER, "obj", 0),
+                                new Token(Token.Type.OPERATOR, ".", 3),
+                                new Token(Token.Type.IDENTIFIER, "field", 4),
+                                new Token(Token.Type.OPERATOR, ".", 9),
+                                new Token(Token.Type.IDENTIFIER, "field2", 10)
+                        ),
+                        new Ast.Expression.Access(Optional.of(new Ast.Expression.Access(Optional.of(new Ast.Expression.Access(Optional.empty(), "obj")), "field")), "field2")
                 )
         );
     }
